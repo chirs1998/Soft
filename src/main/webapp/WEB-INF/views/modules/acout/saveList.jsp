@@ -37,7 +37,6 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-
 				<th>商品名称</th>
 				<th>图片地址</th>
 				<th>价格</th>
