@@ -7,6 +7,8 @@ import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.acout.entity.Save;
 
+import java.util.List;
+
 /**
  * 商品DAO接口
  * @author 鄢嘉骏
@@ -14,5 +16,6 @@ import com.thinkgem.jeesite.modules.acout.entity.Save;
  */
 @MyBatisDao
 public interface SaveDao extends CrudDao<Save> {
-	
+    Save findDatail(Save entity);
+    //获得该商品的库存和订单情况
 }

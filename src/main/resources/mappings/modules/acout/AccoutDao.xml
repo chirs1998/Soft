@@ -14,10 +14,28 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag",
-		u2.name AS "user.name"
+		a.del_flag AS "delFlag"
 	</sql>
-	
+
+	<sql id="saveColumns">
+		s.id AS "id",
+		s.img_url AS "imgUrl",
+		s.price AS "price",
+		s.count AS "restCount",
+		s.create_by AS "createBy.id",
+		s.create_date AS "createDate",
+		s.update_by AS "updateBy.id",
+		s.update_date AS "updateDate",
+		s.remarks AS "remarks",
+		s.del_flag AS "delFlag",
+		b.name As "type.name"
+	</sql>
+
+	<sql id="myCarColumns">
+		s.count AS "save.restCount",
+		sum(a.count) AS "save.checkedCount"
+	</sql>
+
 	<sql id="accoutJoins">
 		LEFT JOIN sys_user u2 ON u2.id = a.user_id
 	</sql>
@@ -114,5 +132,115 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	
+
+	<!--查看购物车-->
+	<select id="findMyCarList" resultType="Accout">
+		SELECT
+		<include refid="accoutColumns"/>
+		FROM
+			save s,
+			type b,
+			accout a
+		WHERE
+			s.type_id = b.id
+		AND a.save_id = s.id
+		<if	test="user !=null">
+		AND a.user_id = #{user.id}
+		</if>
+		<if	test="user ==null">
+			and a.status>0
+		</if>
+		<if	test="remarks !=null and remarks != null">
+			and b.name like concat('%',#{remarks},'%')
+		</if>
+		<if	test="status ==0">
+			and a.`status`=#{status}
+		</if>
+		<if	test="status ==1">
+			and a.`status`>0
+		</if>
+		and s.del_flag = #{DEL_FLAG_NORMAL}
+		and b.del_flag = #{DEL_FLAG_NORMAL}
+		and a.del_flag = #{DEL_FLAG_NORMAL}
+		GROUP by a.accout_group
+		order by a.status,a.update_date desc
+	</select>
+
+	<!--对订单分组(购物车查询)-->
+	<select id="findMyCarListByGroup" resultType="Save">
+		SELECT
+		<include refid="saveColumns"/>,
+		sum(a.count) as "count",
+		b.status as "type.status",
+		c.name as "createBy.name"
+		FROM
+		save s,
+		type b,
+		accout a,
+		sys_user c
+		WHERE
+		s.type_id = b.id
+		AND a.save_id = s.id
+		and c.id=a.create_by
+		and a.del_flag = #{DEL_FLAG_NORMAL}
+		and b.del_flag = #{DEL_FLAG_NORMAL}
+		and s.del_flag = #{DEL_FLAG_NORMAL}
+		<if	test="accoutGroup==null">
+-- 			如果是购物车的查询就不分组
+			and a.accout_group is null
+			GROUP by a.save_id
+		</if>
+		<if	test="accoutGroup!=null">
+			and a.accout_group=#{accoutGroup}
+		</if>
+	</select>
+	<!--查询以往的订单-->
+	<select id="findHistoryByGroup" resultType="Save">
+		SELECT
+		<include refid="saveColumns"/>,
+		a.count as 'count',
+		c.name as "createBy.name"
+		FROM
+		save s,
+		type b,
+		accout a,
+		sys_user c
+		WHERE
+		s.type_id = b.id
+		AND a.save_id = s.id
+		and c.id=a.create_by
+		and a.del_flag = #{DEL_FLAG_NORMAL}
+		and b.del_flag = #{DEL_FLAG_NORMAL}
+		and s.del_flag = #{DEL_FLAG_NORMAL}
+		<!--<if	test="remarks !=null and remarks != null">-->
+			<!--and b.name like concat('%',#{remarks},'%')-->
+		<!--</if>-->
+		<if	test="accoutGroup==null">
+			-- 			如果是购物车的查询就不分组
+			and a.accout_group is null
+			GROUP by a.save_id
+		</if>
+		<if	test="accoutGroup!=null">
+			and a.accout_group=#{accoutGroup}
+		</if>
+		order by a.update_date desc
+	</select>
+
+	<!--找到group下的所有订单-->
+	<select id="findGroupById" resultType="Accout">
+		SELECT
+		<include refid="accoutColumns"/>
+		FROM
+		accout a
+		WHERE
+		a.accout_group=#{id}
+		and a.del_flag = 0
+	</select>
+	<!--删除订单-->
+	<update id="clearAccountById">
+		UPDATE accout SET
+		del_flag = 1
+		WHERE save_id = #{saveId}
+		and status="0"
+	</update>
 </mapper>

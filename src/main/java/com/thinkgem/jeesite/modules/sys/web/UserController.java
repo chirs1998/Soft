@@ -95,7 +95,7 @@ public class UserController extends BaseController {
 		return "modules/sys/userForm";
 	}
 
-	@RequiresPermissions("sys:user:edit")
+//	@RequiresPermissions("sys:user:edit")
 	@RequestMapping(value = "save")
 	public String save(User user, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
 		if(Global.isDemoMode()){

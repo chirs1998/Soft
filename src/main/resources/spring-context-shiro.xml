@@ -18,6 +18,8 @@
 				/userfiles/** = anon
 				${adminPath}/cas = cas
 				${adminPath}/login = authc
+				${adminPath}/acout/type/toRegister = anon
+				${adminPath}/acout/type/register = anon
 				${adminPath}/logout = logout
 				${adminPath}/** = user
 				/act/editor/** = user

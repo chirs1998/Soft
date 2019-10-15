@@ -9,19 +9,22 @@ import org.hibernate.validator.constraints.Length;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
+import java.util.List;
+
 /**
- * 订单Entity
+ * 商品种类Entity
  * @author 鄢嘉骏
- * @version 2019-09-10
+ * @version 2019-10-02
  */
 public class Accout extends DataEntity<Accout> {
 	
 	private static final long serialVersionUID = 1L;
 	private User user;		// 归属用户
-	private String status;		// 状态0购物车
+	private String status;		// 状态0购物车1已下单2已完成
 	private String count;		// 数量
 	private String accoutGroup;		// 订单组的归属
 	private String saveId;		// 商品id
+	private List<Save> saveList;//商品列表
 	
 	public Accout() {
 		super();
@@ -75,5 +78,12 @@ public class Accout extends DataEntity<Accout> {
 	public void setSaveId(String saveId) {
 		this.saveId = saveId;
 	}
-	
+
+	public List<Save> getSaveList() {
+		return saveList;
+	}
+
+	public void setSaveList(List<Save> saveList) {
+		this.saveList = saveList;
+	}
 }

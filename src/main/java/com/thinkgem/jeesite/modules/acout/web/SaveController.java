@@ -6,6 +6,8 @@ package com.thinkgem.jeesite.modules.acout.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thinkgem.jeesite.modules.acout.entity.Type;
+import com.thinkgem.jeesite.modules.acout.service.TypeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.config.Global;
@@ -33,7 +36,8 @@ public class SaveController extends BaseController {
 
 	@Autowired
 	private SaveService saveService;
-	
+	@Autowired
+	private TypeService typeService;
 	@ModelAttribute
 	public Save get(@RequestParam(required=false) String id) {
 		Save entity = null;
@@ -46,7 +50,7 @@ public class SaveController extends BaseController {
 		return entity;
 	}
 	
-	@RequiresPermissions("acout:save:view")
+//	@RequiresPermissions("acout:save:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(Save save, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<Save> page = saveService.findPage(new Page<Save>(request, response), save); 
@@ -54,14 +58,13 @@ public class SaveController extends BaseController {
 		return "modules/acout/saveList";
 	}
 
-	@RequiresPermissions("acout:save:view")
 	@RequestMapping(value = "form")
 	public String form(Save save, Model model) {
+		model.addAttribute("typeList",typeService.findList(new Type()));
 		model.addAttribute("save", save);
 		return "modules/acout/saveForm";
 	}
 
-	@RequiresPermissions("acout:save:edit")
 	@RequestMapping(value = "save")
 	public String save(Save save, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, save)){
@@ -78,6 +81,24 @@ public class SaveController extends BaseController {
 		saveService.delete(save);
 		addMessage(redirectAttributes, "删除商品成功");
 		return "redirect:"+Global.getAdminPath()+"/acout/save/?repage";
+	}
+
+	//	添加库存
+//	@ResponseBody
+//	@RequestMapping(value = "addSaves")
+//	public String addSaves(String saveId,String count) {
+////		saveService.delete(save);
+//		addMessage(redirectAttributes, "删除商品成功");
+//		return "redirect:"+Global.getAdminPath()+"/acout/save/?repage";
+//	}
+
+
+//	找到库存列表
+	@RequestMapping(value = "findSaveList")
+	public String findSaveList(Type type, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<Type> page = saveService.saveList(new Page<Type>(request, response), type);
+		model.addAttribute("page", page);
+		return "modules/acout/save";
 	}
 
 }

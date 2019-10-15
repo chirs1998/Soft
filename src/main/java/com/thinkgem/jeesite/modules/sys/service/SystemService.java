@@ -112,7 +112,7 @@ public class SystemService extends BaseService implements InitializingBean {
 
 	/**
 	 * 通过部门ID获取用户列表，仅返回用户id和name（树查询用户时用）
-	 * @param user
+	 * @param
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -128,9 +128,16 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 	
 	@Transactional(readOnly = false)
-	public void saveUser(User user) {
+	public void  saveUser(User user) {
 		if (StringUtils.isBlank(user.getId())){
 			user.preInsert();
+			if(user.getCreateBy()==null)
+			{
+				user.setCreateBy(new User("1"));
+				user.setUpdateBy(new User("1"));
+				user.setCreateDate(new Date());
+				user.setUpdateDate(new Date());
+			}
 			userDao.insert(user);
 		}else{
 			// 清除原用户机构用户缓存

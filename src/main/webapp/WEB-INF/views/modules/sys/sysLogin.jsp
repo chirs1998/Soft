@@ -15,6 +15,18 @@
       .form-signin div.validateCode {padding-bottom:15px;} .mid{vertical-align:middle;}
       .header{height:80px;padding-top:20px;} .alert{position:relative;width:300px;margin:0 auto;*padding-bottom:0px;}
       label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}
+		body{
+			background:url("${ctxStatic}/Picture/login.jpg")  no-repeat 4px 5px ;
+			/*width: 100%;*/
+			height: 1040px;
+		}
+		.form-signin{
+			opacity: 0.9;
+		}
+	  	.form-signin-heading
+		{
+			color: white;
+		}
     </style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -37,6 +49,14 @@
 			alert('未登录或登录超时。请重新登录，谢谢！');
 			top.location = "${ctx}";
 		}
+        function openJbox() {
+            $.jBox("${ctx}/acout/toRegister", {
+                title: "百度一下",
+                width: 800,
+                height: 350,
+                buttons: { '关闭': true }
+            });
+        }
 	</script>
 </head>
 <body>
@@ -59,6 +79,12 @@
 		<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
 		<input class="btn btn-large btn-primary" type="submit" value="登 录"/>&nbsp;&nbsp;
 		<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
+		<div>
+			<a href="${ctx}/acout/type/toRegister"
+			   <%--onclick="openJbox()"--%>
+			>点击注册
+			</a>
+		</div>
 		<div id="themeSwitch" class="dropdown">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>
 			<ul class="dropdown-menu">

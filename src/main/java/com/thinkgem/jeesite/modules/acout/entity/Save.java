@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.acout.entity;
 
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import org.hibernate.validator.constraints.Length;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
@@ -19,7 +20,11 @@ public class Save extends DataEntity<Save> {
 	private String imgUrl;		// 图片地址
 	private String price;		// price
 	private String count;		// 数量
-	
+	private Type type;			//种类
+	private String checkedCount;//已选数量
+	private String restCount;//已选数量
+	private User user;//当前用户
+
 	public Save() {
 		super();
 	}
@@ -63,5 +68,36 @@ public class Save extends DataEntity<Save> {
 	public void setCount(String count) {
 		this.count = count;
 	}
-	
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public String getCheckedCount() {
+		return checkedCount;
+	}
+
+	public void setCheckedCount(String checkedCount) {
+		this.checkedCount = checkedCount;
+	}
+
+	public String getRestCount() {
+		return restCount;
+	}
+
+	public void setRestCount(String restCount) {
+		this.restCount = restCount;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

@@ -106,10 +106,10 @@ public class LoginController extends BaseController{
 		model.addAttribute(FormAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
 		
 		if (logger.isDebugEnabled()){
-			logger.debug("login fail, active session size: {}, message: {}, exception: {}", 
+			logger.debug("login fail, active session size: {}, message: {}, exception: {}",
 					sessionDAO.getActiveSessions(false).size(), message, exception);
 		}
-		
+
 		// 非授权异常，登录失败，验证码加1。
 		if (!UnauthorizedException.class.getName().equals(exception)){
 			model.addAttribute("isValidateCodeLogin", isValidateCodeLogin(username, true, false));

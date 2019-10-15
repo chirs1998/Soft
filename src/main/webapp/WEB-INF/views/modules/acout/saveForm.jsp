@@ -32,21 +32,23 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="save" action="${ctx}/acout/save/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">商品名称：</label>
-			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="255" class="input-xlarge "/>
-			</div>
+		<sys:message content="${message}"/>
+		<div>
+			商品种类
+			<select name="type.id" id="">
+				<c:forEach items="${typeList}" var="item">
+					<option value="${item.id}">${item.name}</option>
+				</c:forEach>
+			</select>
 		</div>
+		<%--<div class="control-group">--%>
+			<%--<label class="control-label">图片地址：</label>--%>
+			<%--<div class="controls">--%>
+				<%--<form:input path="imgUrl" htmlEscape="false" maxlength="255" class="input-xlarge "/>--%>
+			<%--</div>--%>
+		<%--</div>--%>
 		<div class="control-group">
-			<label class="control-label">图片地址：</label>
-			<div class="controls">
-				<form:input path="imgUrl" htmlEscape="false" maxlength="255" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">price：</label>
+			<label class="control-label">价格</label>
 			<div class="controls">
 				<form:input path="price" htmlEscape="false" maxlength="10" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
@@ -65,7 +67,9 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="acout:save:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<%--<shiro:hasPermission name="acout:save:edit">--%>
+				<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
+			<%--</shiro:hasPermission>--%>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

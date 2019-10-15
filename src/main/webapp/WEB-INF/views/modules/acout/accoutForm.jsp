@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>订单管理</title>
+	<title>商品种类管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -27,8 +27,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/acout/accout/">订单列表</a></li>
-		<li class="active"><a href="${ctx}/acout/accout/form?id=${accout.id}">订单<shiro:hasPermission name="acout:accout:edit">${not empty accout.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="acout:accout:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/acout/accout/">商品种类列表</a></li>
+		<li class="active"><a href="${ctx}/acout/accout/form?id=${accout.id}">商品种类<shiro:hasPermission name="acout:accout:edit">${not empty accout.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="acout:accout:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="accout" action="${ctx}/acout/accout/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

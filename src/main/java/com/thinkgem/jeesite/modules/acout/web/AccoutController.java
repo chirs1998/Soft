@@ -6,13 +6,13 @@ package com.thinkgem.jeesite.modules.acout.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thinkgem.jeesite.modules.acout.entity.Save;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.config.Global;
@@ -22,10 +22,12 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.acout.entity.Accout;
 import com.thinkgem.jeesite.modules.acout.service.AccoutService;
 
+import java.util.List;
+
 /**
- * 订单Controller
+ * 商品种类Controller
  * @author 鄢嘉骏
- * @version 2019-09-10
+ * @version 2019-10-02
  */
 @Controller
 @RequestMapping(value = "${adminPath}/acout/accout")
@@ -68,7 +70,7 @@ public class AccoutController extends BaseController {
 			return form(accout, model);
 		}
 		accoutService.save(accout);
-		addMessage(redirectAttributes, "保存订单成功");
+		addMessage(redirectAttributes, "保存商品种类成功");
 		return "redirect:"+Global.getAdminPath()+"/acout/accout/?repage";
 	}
 	
@@ -76,17 +78,60 @@ public class AccoutController extends BaseController {
 	@RequestMapping(value = "delete")
 	public String delete(Accout accout, RedirectAttributes redirectAttributes) {
 		accoutService.delete(accout);
-		addMessage(redirectAttributes, "删除订单成功");
+		addMessage(redirectAttributes, "删除商品种类成功");
 		return "redirect:"+Global.getAdminPath()+"/acout/accout/?repage";
 	}
-
-	@RequiresPermissions("acout:accout:detail")
-	@RequestMapping(value = "accountDetail")
-	public String accountDetail(Accout accout, RedirectAttributes redirectAttributes) {
-		accoutService.delete(accout);
-		addMessage(redirectAttributes, "删除订单成功");
-		return "modules/acout/accountDetail";
+	//查看购物车
+	@RequestMapping(value = "findMyCar")
+	public String findMyCar(Accout accout,  HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<Accout> page = accoutService.findMyCarPage(new Page<Accout>(request, response), accout);
+		model.addAttribute("page", page);
+		return "modules/acout/accoutList";
+	}
+	//查看所有订单
+	@RequestMapping(value = "findMyAccount")
+	public String findMyAccount(Accout accout,  HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<Accout> page = accoutService.findMyAccountPage(new Page<Accout>(request, response), accout);
+		model.addAttribute("page", page);
+		return "modules/acout/historyList";
 	}
 
+	//添加商品进购物车
+	@ResponseBody
+	@RequestMapping(value = "addNewAccount")
+	public String addNewAccount(String saveId,String count) {
+		accoutService.addNewAccount( saveId, count);
+		return "OK";
+	}
 
+	//删除某一种商品
+	@ResponseBody
+	@RequestMapping(value = "clearAccountById")
+	public String clearAccountById(String saveId) {
+		accoutService.clearAccountById( saveId);
+		return "OK";
+	}
+	//提交购物车
+	@ResponseBody
+	@RequestMapping(value = "addMyCarList")
+	public String addMyCarList(@RequestBody List<Save> list) {
+		accoutService.addMyCarList(list);
+		return "OK";
+	}
+
+	//订单管理界面
+	@RequestMapping(value = "manageAccount")
+	public String manageAccount(Accout accout,  HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<Accout> page = accoutService.findAllAccount(new Page<Accout>(request, response), accout);
+		model.addAttribute("page", page);
+		return "modules/acout/allHistoryList";
+	}
+	//完成订单
+	@RequestMapping(value = "finishAccout")
+	public String finishAccout(Accout accout,  HttpServletRequest request, HttpServletResponse response, Model model) {
+		accoutService.confirmAccount(accout);
+//		Page<Accout> page = accoutService.findAllAccount(new Page<Accout>(request, response), accout);
+//		model.addAttribute("page", page);
+		return "modules/acout/allHistoryList";
+	}
 }
